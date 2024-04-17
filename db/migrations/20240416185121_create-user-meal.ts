@@ -6,7 +6,7 @@ export async function up(knex: Knex): Promise<void> {
     table.string('name')
     table.string('email')
     table.string('password')
-    table.timestamp('created_at').defaultTo(knex.fn.now()).notNullable()
+    table.timestamp('created_at').defaultTo(knex.fn.now()).nullable()
   })
   await knex.schema.createTable('meals', (table) => {
     table.uuid('id').primary()
@@ -14,7 +14,8 @@ export async function up(knex: Knex): Promise<void> {
     table.string('title')
     table.text('description')
     table.boolean('on_diet')
-    table.timestamp('created_at').defaultTo(knex.fn.now()).notNullable()
+    table.timestamp('created_at').defaultTo(knex.fn.now()).nullable()
+    table.timestamp('updated_at').defaultTo(knex.fn.now()).nullable()
   })
 }
 

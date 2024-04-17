@@ -26,15 +26,44 @@ export const mealsRoutes = async (app: FastifyInstance) => {
   })
 
   app.put('/:id', async (request, reply) => {
-    reply.status(201).send()
+    const userId = request.cookies['@dailydiet:userId']
+    const getMealParams = z.object({
+      id: z.string().uuid(),
+    })
+    const mealId = getMealParams.parse(request.params).id
+    const { title, description, onDiet } = mealSchema.parse(request.body)
+    await db('meals')
+      .update({
+        title,
+        description,
+        on_diet: onDiet,
+        updated_at: new Date(),
+      })
+      .where({ id: mealId, user_id: userId })
+
+    reply.status(204).send()
   })
 
   app.delete('/:id', async (request, reply) => {
-    reply.status(201).send()
+    const userId = request.cookies['@dailydiet:userId']
+    const getMealParams = z.object({
+      id: z.string().uuid(),
+    })
+    const mealId = getMealParams.parse(request.params).id
+    await db('meals').where({ id: mealId, user_id: userId }).delete()
+    reply.status(204).send()
   })
 
   app.get('/:id', async (request, reply) => {
-    reply.status(201).send()
+    const userId = request.cookies['@dailydiet:userId']
+    const getMealParams = z.object({
+      id: z.string().uuid(),
+    })
+    const mealId = getMealParams.parse(request.params).id
+    const meal = await db('meals')
+      .where({ id: mealId, user_id: userId })
+      .first('title', 'description', 'on_diet')
+    reply.status(200).send({ meal })
   })
 
   app.get('/', async (request, reply) => {
