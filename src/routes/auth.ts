@@ -62,6 +62,6 @@ export const authRoutes = async (app: FastifyInstance) => {
       maxAge: 60 * 60 * 24 * 7, // 7 days
     })
 
-    reply.status(201).send()
+    reply.status(204).send()
   })
 }

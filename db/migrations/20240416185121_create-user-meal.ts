@@ -10,6 +10,7 @@ export async function up(knex: Knex): Promise<void> {
   })
   await knex.schema.createTable('meals', (table) => {
     table.uuid('id').primary()
+    table.uuid('user_id').references('users.id')
     table.string('title')
     table.text('description')
     table.boolean('on_diet')
